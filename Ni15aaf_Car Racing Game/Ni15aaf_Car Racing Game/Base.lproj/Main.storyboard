@@ -24,16 +24,28 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RTl-5S-ruO" userLabel="UIViewContainer">
                                 <rect key="frame" x="0.0" y="20" width="414" height="716"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bdw-5V-rb7" userLabel="UIImgViewRoad">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aw1-Ap-MPb" userLabel="UIViewInnerContainer">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
-                                    </imageView>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bdw-5V-rb7" userLabel="UIImgViewRoad">
+                                                <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="bdw-5V-rb7" firstAttribute="top" secondItem="aw1-Ap-MPb" secondAttribute="top" id="Jai-k1-i4k"/>
+                                            <constraint firstAttribute="trailing" secondItem="bdw-5V-rb7" secondAttribute="trailing" id="Jcw-ce-3zr"/>
+                                            <constraint firstAttribute="bottom" secondItem="bdw-5V-rb7" secondAttribute="bottom" id="aHG-Un-HFy"/>
+                                            <constraint firstItem="bdw-5V-rb7" firstAttribute="leading" secondItem="aw1-Ap-MPb" secondAttribute="leading" id="tjE-cC-SjN"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="bdw-5V-rb7" secondAttribute="trailing" id="e3X-KJ-oQ1"/>
-                                    <constraint firstAttribute="bottom" secondItem="bdw-5V-rb7" secondAttribute="bottom" id="me1-wi-Eck"/>
-                                    <constraint firstItem="bdw-5V-rb7" firstAttribute="leading" secondItem="RTl-5S-ruO" secondAttribute="leading" id="nb8-zF-7uz"/>
-                                    <constraint firstItem="bdw-5V-rb7" firstAttribute="top" secondItem="RTl-5S-ruO" secondAttribute="top" id="q1W-qI-WfH"/>
+                                    <constraint firstAttribute="trailing" secondItem="aw1-Ap-MPb" secondAttribute="trailing" id="1fK-po-rbZ"/>
+                                    <constraint firstAttribute="bottom" secondItem="aw1-Ap-MPb" secondAttribute="bottom" id="V1i-b1-xZI"/>
+                                    <constraint firstItem="aw1-Ap-MPb" firstAttribute="leading" secondItem="RTl-5S-ruO" secondAttribute="leading" id="emG-F5-H2U"/>
+                                    <constraint firstItem="aw1-Ap-MPb" firstAttribute="top" secondItem="RTl-5S-ruO" secondAttribute="top" id="zST-bF-WAU"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -48,6 +60,7 @@
                     <connections>
                         <outlet property="ImgViewRoad" destination="bdw-5V-rb7" id="2Ar-K1-cvP"/>
                         <outlet property="ViewContainer" destination="RTl-5S-ruO" id="5bK-gk-C4Z"/>
+                        <outlet property="ViewInnerContainer" destination="aw1-Ap-MPb" id="OAZ-7Z-XEs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -8,20 +8,31 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+protocol SubViewDelegate {
+    func movePlayersColissionBounds()
+}
+
+class ViewController: UIViewController, SubViewDelegate {
     @IBOutlet weak var ImgViewRoad: UIImageView!
     @IBOutlet weak var ViewContainer: UIView!
+    @IBOutlet weak var ViewInnerContainer: UIView!
     
     var dynamicAnimator: UIDynamicAnimator!
     var dynamicItemBehaviour: UIDynamicItemBehavior!
+    var collisionBehaviour: UICollisionBehavior!
     
     //Array for containing roads sections images
     var roadSectsImg: [UIImage]!
     //Array containing cars - player car excluded
     var carsImg: [UIImage]!
     
-    var playerCarImageView: UIImageView!
+    var opponentCarsListForCollision: [UIImageView]!
+    
+    var playerCarImageView: DraggableImageView!
     var pointsCounterView: UILabel!
+    
+    //Timers
+    var gameTimer: Timer!
     
     func showGameOverScreen(rootView:UIView, points:Int){
         let rect = CGRect(x: 0, y: 0, width: 100, height: 300)
@@ -103,6 +114,8 @@ class ViewController: UIViewController {
         rootView.addConstraint(NSLayoutConstraint(item: gameOverView, attribute: .leftMargin, relatedBy: .equal, toItem: rootView, attribute: .leftMargin,multiplier: 1, constant: 0))
         rootView.addConstraint(NSLayoutConstraint(item: gameOverView, attribute: .rightMargin, relatedBy: .equal, toItem: rootView, attribute: .rightMargin, multiplier: 1, constant: 0))
         
+        rootView.bringSubview(toFront: gameOverView)
+        
     }
     
     func setRoadImgs(){
@@ -168,9 +181,9 @@ class ViewController: UIViewController {
         let maxX = Int(rootView.bounds.size.width)-minX
         
         //create and ImageView
-        let posX = random(minX..<maxX+1)
+        let posX = random(minX..<maxX)
         
-        let rect = CGRect(x: posX, y: 10, width: 50, height: 90)
+        let rect = CGRect(x: posX, y: 0, width: 50, height: 90)
         let obstacleCar = UIImageView(frame: rect)
         obstacleCar.image = carsImg[random(0..<6)]
         
@@ -180,12 +193,44 @@ class ViewController: UIViewController {
         dynamicItemBehaviour.addLinearVelocity(CGPoint(x: 0, y: 300), for: obstacleCar)
         dynamicAnimator.addBehavior(dynamicItemBehaviour)
         
+        
+        if(!opponentCarsListForCollision.contains(obstacleCar)){
+            opponentCarsListForCollision.append(obstacleCar)
+        }
+        
+        collisionBehaviour = UICollisionBehavior(items: opponentCarsListForCollision)
+        collisionBehaviour.translatesReferenceBoundsIntoBoundary = false
+        collisionBehaviour.addBoundary(withIdentifier: "MainCarBoundary" as NSCopying, for: UIBezierPath(rect: playerCarImageView.frame))
+        dynamicAnimator.addBehavior(collisionBehaviour)
+        
+        //Two main issues: **
+        //cars overlapping - playing with the timer can fix this
+        //cars displying out of the road - use the same trick used to confine player car in screan bounds
+        
+        //Remember to change the falling speed **
+    }
+    
+    func movePlayersColissionBounds(){
+        collisionBehaviour.removeAllBoundaries();
+        collisionBehaviour.addBoundary(withIdentifier: "MainCarBoundary" as NSCopying, for: UIBezierPath(rect: playerCarImageView.frame))
+    }
+    
+    @objc func runTimedCode(){
+        let when = DispatchTime.now() + DispatchTimeInterval.seconds(random(0..<3))
+        DispatchQueue.main.asyncAfter(deadline: when) {
+            self.generateCarFall(rootView: self.ViewInnerContainer)
+        }
+        //There's an issue where once the game is over cars keep showing on the end screen. Could resolve like this: **
+        //Create another transparent view where random cars are only added -> insertSubview(_:belowSubview:)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        dynamicAnimator = UIDynamicAnimator(referenceView: ViewContainer)
+        dynamicAnimator = UIDynamicAnimator(referenceView: ViewInnerContainer)
+        
+        //Initilaise the array that will keep track of all opposing cars in the game.
+        opponentCarsListForCollision = [UIImageView]()
         
         //Setting all road Images for the animation
         roadSectsImg = [UIImage]()
@@ -199,15 +244,25 @@ class ViewController: UIViewController {
         setOtherCarsImgs()
         
         //Show game points counter on screen
-        setCounterOnScreen(rootView: ViewContainer)
+        setCounterOnScreen(rootView: ViewInnerContainer)
         
         //Display player car
         addPlayerCar(rootView: ViewContainer)
-        generateCarFall(rootView: ViewContainer)
+        playerCarImageView.parentClassDelegate = self
         
-        incrementPointsCounter(amount: 0)
-        //Showing the game over screen
-        //showGameOverScreen(rootView: ViewContainer, points: 0)
+        
+        gameTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+
+        //Game termination after 20 seconds **
+        let when = DispatchTime.now() + DispatchTimeInterval.seconds(200)
+        DispatchQueue.main.asyncAfter(deadline: when) {
+            self.gameTimer.invalidate()
+            //Showing the game over screen
+            self.showGameOverScreen(rootView: self.ViewContainer, points: Int(self.pointsCounterView.text!)!)
+        }
+        
+        //to increment game points use:
+        //incrementPointsCounter(amount: 0)
     }
 
     override func didReceiveMemoryWarning() {

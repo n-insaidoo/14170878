@@ -11,11 +11,10 @@ import UIKit
 class DraggableImageView: UIImageView {
 
     var startLocation: CGPoint?
+    var parentClassDelegate: SubViewDelegate?
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         startLocation = touches.first?.location(in: self)
-        
-        
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -36,6 +35,8 @@ class DraggableImageView: UIImageView {
         
         //Set new location
         self.center = newcenter
+        
+        self.parentClassDelegate?.movePlayersColissionBounds()
     }
 
 }
