@@ -10,9 +10,12 @@ import UIKit
 
 protocol SubViewDelegate {
     func movePlayersColissionBounds()
+    func resetTimer()
 }
 
-class ViewController: UIViewController, SubViewDelegate {
+
+
+class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDelegate {
     @IBOutlet weak var ImgViewRoad: UIImageView!
     @IBOutlet weak var ViewContainer: UIView!
     @IBOutlet weak var ViewInnerContainer: UIView!
@@ -49,37 +52,8 @@ class ViewController: UIViewController, SubViewDelegate {
         pointsLabelView.textColor = UIColor.white
         pointsLabelView.textAlignment = .center
         
-        //Not so anonymous class definition
-        class replayCustomUIImageView: UIImageView {
-            
-            private var _parentView: UIView?
-            
-            override init(image: UIImage?) {
-                super.init(image: image)
-                _parentView = nil
-            }
-            
-            override init(frame: CGRect) {
-                super.init(frame: frame)
-                _parentView = nil
-            }
-            
-            required init?(coder aDecoder: NSCoder) {
-                super.init(coder: aDecoder)
-                _parentView = nil
-            }
-            
-            init(frame: CGRect, parentView: UIView) {
-                super.init(frame: frame)
-                _parentView = parentView
-            }
-            
-            override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-                _parentView!.removeFromSuperview()
-            }
-        }
-        
         let replayImageView = replayCustomUIImageView(frame: rect, parentView: gameOverView)
+        replayImageView.parentClassDelegate = self
         replayImageView.image = UIImage(named: "replay.png")
         replayImageView.isUserInteractionEnabled = true
         
@@ -189,6 +163,9 @@ class ViewController: UIViewController, SubViewDelegate {
         
         rootView.addSubview(obstacleCar)
         
+        //At each generation ad 5 points to score
+        incrementPointsCounter(amount: 5)
+        
         dynamicItemBehaviour = UIDynamicItemBehavior(items:[obstacleCar])
         dynamicItemBehaviour.addLinearVelocity(CGPoint(x: 0, y: 300), for: obstacleCar)
         dynamicAnimator.addBehavior(dynamicItemBehaviour)
@@ -200,7 +177,10 @@ class ViewController: UIViewController, SubViewDelegate {
         
         collisionBehaviour = UICollisionBehavior(items: opponentCarsListForCollision)
         collisionBehaviour.translatesReferenceBoundsIntoBoundary = false
-        collisionBehaviour.addBoundary(withIdentifier: "MainCarBoundary" as NSCopying, for: UIBezierPath(rect: playerCarImageView.frame))
+        if playerCarImageView != nil {
+            collisionBehaviour.addBoundary(withIdentifier: "MainCarBoundary" as NSCopying, for: UIBezierPath(rect: playerCarImageView.frame))
+        }
+        collisionBehaviour.collisionDelegate =  self
         dynamicAnimator.addBehavior(collisionBehaviour)
         
         //Two main issues: **
@@ -211,8 +191,14 @@ class ViewController: UIViewController, SubViewDelegate {
     }
     
     func movePlayersColissionBounds(){
-        collisionBehaviour.removeAllBoundaries();
-        collisionBehaviour.addBoundary(withIdentifier: "MainCarBoundary" as NSCopying, for: UIBezierPath(rect: playerCarImageView.frame))
+        if collisionBehaviour != nil {
+            collisionBehaviour.removeAllBoundaries();
+            collisionBehaviour.addBoundary(withIdentifier: "MainCarBoundary" as NSCopying, for: UIBezierPath(rect: playerCarImageView.frame))
+        }
+    }
+    
+    func collisionBehavior(_ behavior: UICollisionBehavior, beganContactFor item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?, at p: CGPoint) {
+        pointsCounterView.text = "0" //At each collision loose points
     }
     
     @objc func runTimedCode(){
@@ -224,11 +210,61 @@ class ViewController: UIViewController, SubViewDelegate {
         //Create another transparent view where random cars are only added -> insertSubview(_:belowSubview:)
     }
     
+    func resetTimer(){
+        //Reset points
+        self.pointsCounterView.text = "0"
+        startGameTimer()
+        setGameDuration()
+    }
+    
+    func startGameTimer(){
+        //initialise the array
+        self.opponentCarsListForCollision = [UIImageView]()
+        
+        //Display player car
+        addPlayerCar(rootView: ViewContainer)
+        playerCarImageView.parentClassDelegate = self
+        
+        gameTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+    }
+    
+    func setGameDuration(){
+        //Game termination after 20 seconds **
+        let when = DispatchTime.now() + DispatchTimeInterval.seconds(20)
+        DispatchQueue.main.asyncAfter(deadline: when) {
+            //stop timer
+            self.gameTimer.invalidate()
+            
+            //remove all opposing cars
+            for view in self.ViewInnerContainer.subviews {
+                if let car = view as? UIImageView {
+                    if car.bounds.width == 50 && car.bounds.height == 90{
+                        car.removeFromSuperview()
+                    }
+                }
+            }
+            self.opponentCarsListForCollision = [UIImageView]()
+            
+            //remove all behaviors
+            self.dynamicAnimator.removeAllBehaviors()
+            
+            //Get points to display
+            let finalPoints: Int = Int(self.pointsCounterView.text!)!
+            
+            //Player Car reset
+            self.playerCarImageView.removeFromSuperview()
+            self.playerCarImageView = nil
+            
+            //Showing the game over screen
+            self.showGameOverScreen(rootView: self.ViewContainer, points: finalPoints)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         dynamicAnimator = UIDynamicAnimator(referenceView: ViewInnerContainer)
-        
+
         //Initilaise the array that will keep track of all opposing cars in the game.
         opponentCarsListForCollision = [UIImageView]()
         
@@ -246,20 +282,9 @@ class ViewController: UIViewController, SubViewDelegate {
         //Show game points counter on screen
         setCounterOnScreen(rootView: ViewInnerContainer)
         
-        //Display player car
-        addPlayerCar(rootView: ViewContainer)
-        playerCarImageView.parentClassDelegate = self
-        
-        
-        gameTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
-
-        //Game termination after 20 seconds **
-        let when = DispatchTime.now() + DispatchTimeInterval.seconds(200)
-        DispatchQueue.main.asyncAfter(deadline: when) {
-            self.gameTimer.invalidate()
-            //Showing the game over screen
-            self.showGameOverScreen(rootView: self.ViewContainer, points: Int(self.pointsCounterView.text!)!)
-        }
+        //Start all game timing
+        startGameTimer()
+        setGameDuration()
         
         //to increment game points use:
         //incrementPointsCounter(amount: 0)

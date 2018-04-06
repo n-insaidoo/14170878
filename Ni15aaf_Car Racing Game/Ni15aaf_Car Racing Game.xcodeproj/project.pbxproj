@@ -14,6 +14,7 @@
 		2C76AEE320690F2600596BA5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C76AEE120690F2600596BA5 /* LaunchScreen.storyboard */; };
 		2C76AEEE20690F2600596BA5 /* Ni15aaf_Car_Racing_GameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C76AEED20690F2600596BA5 /* Ni15aaf_Car_Racing_GameTests.swift */; };
 		2C76AEF920690F2600596BA5 /* Ni15aaf_Car_Racing_GameUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C76AEF820690F2600596BA5 /* Ni15aaf_Car_Racing_GameUITests.swift */; };
+		39A9310220779B56009AEF9C /* replayCustomUIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A9310120779B56009AEF9C /* replayCustomUIImageView.swift */; };
 		39C41BDA20761F53004E01A5 /* road3.png in Resources */ = {isa = PBXBuildFile; fileRef = 39C41BC620761F4F004E01A5 /* road3.png */; };
 		39C41BDB20761F53004E01A5 /* road6.png in Resources */ = {isa = PBXBuildFile; fileRef = 39C41BC720761F4F004E01A5 /* road6.png */; };
 		39C41BDC20761F53004E01A5 /* road16.png in Resources */ = {isa = PBXBuildFile; fileRef = 39C41BC820761F4F004E01A5 /* road16.png */; };
@@ -78,6 +79,7 @@
 		2C76AEF420690F2600596BA5 /* Ni15aaf_Car Racing GameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Ni15aaf_Car Racing GameUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C76AEF820690F2600596BA5 /* Ni15aaf_Car_Racing_GameUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ni15aaf_Car_Racing_GameUITests.swift; sourceTree = "<group>"; };
 		2C76AEFA20690F2600596BA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		39A9310120779B56009AEF9C /* replayCustomUIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = replayCustomUIImageView.swift; sourceTree = "<group>"; };
 		39C41BC620761F4F004E01A5 /* road3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = road3.png; sourceTree = "<group>"; };
 		39C41BC720761F4F004E01A5 /* road6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = road6.png; sourceTree = "<group>"; };
 		39C41BC820761F4F004E01A5 /* road16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = road16.png; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				2C76AEDF20690F2600596BA5 /* Assets.xcassets */,
 				2C76AEE120690F2600596BA5 /* LaunchScreen.storyboard */,
 				2C76AEE420690F2600596BA5 /* Info.plist */,
+				39A9310120779B56009AEF9C /* replayCustomUIImageView.swift */,
 			);
 			path = "Ni15aaf_Car Racing Game";
 			sourceTree = "<group>";
@@ -414,6 +417,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39A9310220779B56009AEF9C /* replayCustomUIImageView.swift in Sources */,
 				2C76AEDB20690F2600596BA5 /* ViewController.swift in Sources */,
 				39C41C05207669E8004E01A5 /* DraggableImageView.swift in Sources */,
 				2C76AED920690F2600596BA5 /* AppDelegate.swift in Sources */,
