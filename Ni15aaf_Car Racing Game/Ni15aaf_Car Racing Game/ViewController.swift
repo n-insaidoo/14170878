@@ -11,6 +11,8 @@ import UIKit
 protocol SubViewDelegate {
     func movePlayersColissionBounds()
     func resetTimer()
+    func showInformationView()
+    func playGameButtonPressed()
 }
 
 
@@ -37,14 +39,127 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
     //Timers
     var gameTimer: Timer!
     
+    func showPlayGameScreen(rootView:UIView){
+        let rect = CGRect(x: 0, y: 0, width: 100, height: 300)
+        
+        let startGameViewBottom = UIView(frame: rect)
+        let startGameViewContainer = UIView(frame: rect)
+        startGameViewBottom.backgroundColor = UIColor.black
+        
+        let startGameImageView = UIImageView(image: UIImage(named: "start_game.png"))
+        
+        let gameLogoImageView = UIImageView(frame: rect)
+        gameLogoImageView.image = UIImage(named: "logo.png")
+        
+        let playImageView = playCustomUIImageView(frame: rect, parentView: startGameViewContainer)
+        playImageView.parentClassDelegate = self
+        playImageView.image = UIImage(named: "play.png")
+        playImageView.isUserInteractionEnabled = true
+        
+        let informationImageView = InformationCustomUIImageView(image: UIImage(named: "info.png"))
+        informationImageView.parentClassDelegate = self
+        informationImageView.isUserInteractionEnabled = true
+        
+        startGameViewBottom.addSubview(startGameImageView)
+        startGameViewBottom.addSubview(gameLogoImageView)
+        startGameViewBottom.addSubview(playImageView)
+        startGameViewBottom.addSubview(informationImageView)
+        
+        informationImageView.translatesAutoresizingMaskIntoConstraints = false
+        startGameViewBottom.addConstraint(NSLayoutConstraint(item: informationImageView, attribute: .bottom, relatedBy: .equal, toItem: startGameViewBottom, attribute: .bottom, multiplier: 1, constant: -10))
+        startGameViewBottom.addConstraint(NSLayoutConstraint(item: informationImageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute:.notAnAttribute, multiplier: 1, constant: 80))
+        startGameViewBottom.addConstraint(NSLayoutConstraint(item: informationImageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute:.notAnAttribute, multiplier: 1, constant: 80))
+        startGameViewBottom.addConstraint(NSLayoutConstraint(item: informationImageView, attribute: .right, relatedBy: .equal, toItem: startGameViewBottom, attribute:.right, multiplier: 1, constant: -10))
+        
+        playImageView.translatesAutoresizingMaskIntoConstraints = false
+        startGameViewBottom.addConstraint(NSLayoutConstraint(item: playImageView, attribute: .top, relatedBy: .equal, toItem: gameLogoImageView, attribute: .bottom, multiplier: 1, constant: 20))
+        startGameViewBottom.addConstraint(NSLayoutConstraint(item: playImageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute:.notAnAttribute, multiplier: 1, constant: 150))
+        startGameViewBottom.addConstraint(NSLayoutConstraint(item: playImageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute:.notAnAttribute, multiplier: 1, constant: 150))
+        startGameViewBottom.addConstraint(NSLayoutConstraint(item: playImageView, attribute: .centerX, relatedBy: .equal, toItem: startGameViewBottom, attribute:.centerX, multiplier: 1, constant: 5))
+        
+        gameLogoImageView.translatesAutoresizingMaskIntoConstraints = false
+        startGameViewBottom.addConstraint(NSLayoutConstraint(item: gameLogoImageView, attribute: .top, relatedBy: .equal, toItem: startGameViewBottom, attribute: .top, multiplier: 1, constant: 0))
+        startGameViewBottom.addConstraint(NSLayoutConstraint(item: gameLogoImageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute:.notAnAttribute, multiplier: 1, constant: 100))
+        startGameViewBottom.addConstraint(NSLayoutConstraint(item: gameLogoImageView, attribute: .leftMargin, relatedBy: .equal, toItem: startGameViewBottom, attribute: .leftMargin,multiplier: 1, constant: 0))
+        startGameViewBottom.addConstraint(NSLayoutConstraint(item: gameLogoImageView, attribute: .rightMargin, relatedBy: .equal, toItem: startGameViewBottom, attribute: .rightMargin, multiplier: 1, constant: 0))
+        
+        
+        startGameViewContainer.addSubview(startGameImageView)
+        startGameViewContainer.addSubview(startGameViewBottom)
+        
+        startGameImageView.translatesAutoresizingMaskIntoConstraints = false
+        startGameViewContainer.addConstraint(NSLayoutConstraint(item: startGameImageView, attribute: .topMargin, relatedBy: .equal, toItem: startGameViewContainer, attribute: .topMargin, multiplier: 1, constant: 0))
+        startGameViewContainer.addConstraint(NSLayoutConstraint(item: startGameImageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute:.notAnAttribute, multiplier: 1, constant: 250))
+        startGameViewContainer.addConstraint(NSLayoutConstraint(item: startGameImageView, attribute: .leftMargin, relatedBy: .equal, toItem: startGameViewContainer, attribute: .leftMargin, multiplier: 1, constant: 0))
+        startGameViewContainer.addConstraint(NSLayoutConstraint(item: startGameImageView, attribute: .rightMargin, relatedBy: .equal, toItem: startGameViewContainer, attribute: .rightMargin, multiplier: 1, constant: 0))
+        
+        startGameViewBottom.translatesAutoresizingMaskIntoConstraints = false
+        startGameViewContainer.addConstraint(NSLayoutConstraint(item: startGameViewBottom, attribute: .top, relatedBy: .equal, toItem: startGameImageView, attribute: .bottom, multiplier: 1, constant: 0))
+        startGameViewContainer.addConstraint(NSLayoutConstraint(item: startGameViewBottom, attribute: .bottomMargin, relatedBy: .equal, toItem: startGameViewContainer, attribute: .bottomMargin, multiplier: 1, constant: 0))
+        startGameViewContainer.addConstraint(NSLayoutConstraint(item: startGameViewBottom, attribute: .leftMargin, relatedBy: .equal, toItem: startGameViewContainer, attribute: .leftMargin,multiplier: 1, constant: 0))
+        startGameViewContainer.addConstraint(NSLayoutConstraint(item: startGameViewBottom, attribute: .rightMargin, relatedBy: .equal, toItem: startGameViewContainer, attribute: .rightMargin, multiplier: 1, constant: 0))
+        
+        rootView.addSubview(startGameViewContainer)
+        
+        startGameViewContainer.translatesAutoresizingMaskIntoConstraints = false
+        rootView.addConstraint(NSLayoutConstraint(item: startGameViewContainer, attribute: .topMargin, relatedBy: .equal, toItem: rootView, attribute: .topMargin, multiplier: 1, constant: 0))
+        rootView.addConstraint(NSLayoutConstraint(item: startGameViewContainer, attribute: .bottomMargin, relatedBy: .equal, toItem: rootView, attribute: .bottomMargin, multiplier: 1, constant: 0))
+        rootView.addConstraint(NSLayoutConstraint(item: startGameViewContainer, attribute: .leftMargin, relatedBy: .equal, toItem: rootView, attribute: .leftMargin,multiplier: 1, constant: 0))
+        rootView.addConstraint(NSLayoutConstraint(item: startGameViewContainer, attribute: .rightMargin, relatedBy: .equal, toItem: rootView, attribute: .rightMargin, multiplier: 1, constant: 0))
+    }
+    
+    func showInformationView(){
+        let rootView: UIView = ViewContainer //**
+        
+        let rect = CGRect(x: 0, y: 0, width: 100, height: 300)
+        
+        let informationViewConatiner = UIView(frame: rect)
+        
+        var infoPicArr: [UIImage]! = [UIImage]()
+        let infoImageView = UIImageView(frame: rect)
+        for num in 1...2{
+            var fileName: String = "help"
+            fileName+=String(num)
+            fileName+=".png"
+            infoPicArr.append(UIImage(named:fileName)!)
+        }
+        infoImageView.image = UIImage.animatedImage(with: infoPicArr, duration: 30)
+        
+        let exitImageView = ExitCustomUIImageView(frame: rect, parentView: informationViewConatiner)
+        exitImageView.image = UIImage(named: "exit.png")
+        exitImageView.isUserInteractionEnabled = true
+        
+        informationViewConatiner.addSubview(infoImageView)
+        informationViewConatiner.addSubview(exitImageView)
+    
+        exitImageView.translatesAutoresizingMaskIntoConstraints = false
+        informationViewConatiner.addConstraint(NSLayoutConstraint(item: exitImageView, attribute: .top, relatedBy: .equal, toItem: informationViewConatiner, attribute: .top, multiplier: 1, constant: 5))
+        informationViewConatiner.addConstraint(NSLayoutConstraint(item: exitImageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute:.notAnAttribute, multiplier: 1, constant: 50))
+        informationViewConatiner.addConstraint(NSLayoutConstraint(item: exitImageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute:.notAnAttribute, multiplier: 1, constant: 50))
+        informationViewConatiner.addConstraint(NSLayoutConstraint(item: exitImageView, attribute: .right, relatedBy: .equal, toItem: informationViewConatiner, attribute:.right, multiplier: 1, constant: -5))
+        
+        infoImageView.translatesAutoresizingMaskIntoConstraints = false
+        informationViewConatiner.addConstraint(NSLayoutConstraint(item: infoImageView, attribute: .topMargin, relatedBy: .equal, toItem: informationViewConatiner, attribute: .topMargin, multiplier: 1, constant: 0))
+        informationViewConatiner.addConstraint(NSLayoutConstraint(item: infoImageView, attribute: .bottomMargin, relatedBy: .equal, toItem: informationViewConatiner, attribute: .bottomMargin, multiplier: 1, constant: 0))
+        informationViewConatiner.addConstraint(NSLayoutConstraint(item: infoImageView, attribute: .leftMargin, relatedBy: .equal, toItem: informationViewConatiner, attribute: .leftMargin,multiplier: 1, constant: 0))
+        informationViewConatiner.addConstraint(NSLayoutConstraint(item: infoImageView, attribute: .rightMargin, relatedBy: .equal, toItem: informationViewConatiner, attribute: .rightMargin, multiplier: 1, constant: 0))
+        
+        rootView.addSubview(informationViewConatiner)
+        
+        informationViewConatiner.translatesAutoresizingMaskIntoConstraints = false
+        rootView.addConstraint(NSLayoutConstraint(item: informationViewConatiner, attribute: .topMargin, relatedBy: .equal, toItem: rootView, attribute: .topMargin, multiplier: 1, constant: 0))
+        rootView.addConstraint(NSLayoutConstraint(item: informationViewConatiner, attribute: .bottomMargin, relatedBy: .equal, toItem: rootView, attribute: .bottomMargin, multiplier: 1, constant: 0))
+        rootView.addConstraint(NSLayoutConstraint(item: informationViewConatiner, attribute: .leftMargin, relatedBy: .equal, toItem: rootView, attribute: .leftMargin,multiplier: 1, constant: 0))
+        rootView.addConstraint(NSLayoutConstraint(item: informationViewConatiner, attribute: .rightMargin, relatedBy: .equal, toItem: rootView, attribute: .rightMargin, multiplier: 1, constant: 0))
+    }
+    
     func showGameOverScreen(rootView:UIView, points:Int){
         let rect = CGRect(x: 0, y: 0, width: 100, height: 300)
         
         let gameOverView = UIView(frame: rect)
         gameOverView.backgroundColor = UIColor.black
         
-        let gameOverImageView = UIImageView(frame: rect)
-        gameOverImageView.image = UIImage(named:"game_over.jpg")
+        let gameOverImageView = UIImageView(image: UIImage(named:"game_over.jpg"))
         
         let pointsLabelView = UILabel(frame: rect)
         pointsLabelView.text = String(points)+" Points!"
@@ -80,7 +195,7 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
         gameOverView.addConstraint(NSLayoutConstraint(item: gameOverImageView, attribute: .leftMargin, relatedBy: .equal, toItem: gameOverView, attribute: .leftMargin,multiplier: 1, constant: 0))
         gameOverView.addConstraint(NSLayoutConstraint(item: gameOverImageView, attribute: .rightMargin, relatedBy: .equal, toItem: gameOverView, attribute: .rightMargin, multiplier: 1, constant: 0))
 
-        rootView.addSubview(gameOverView);
+        rootView.addSubview(gameOverView)
         
         gameOverView.translatesAutoresizingMaskIntoConstraints = false
         rootView.addConstraint(NSLayoutConstraint(item: gameOverView, attribute: .topMargin, relatedBy: .equal, toItem: rootView, attribute: .topMargin, multiplier: 1, constant: 0))
@@ -129,10 +244,7 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
     }
     
     func addPlayerCar(rootView: UIView){
-        let rect = CGRect(x: 0, y: 0, width: 100, height: 300)
-        
-        playerCarImageView = DraggableImageView(frame: rect)
-        playerCarImageView.image = UIImage(named: "car0.png")
+        playerCarImageView = DraggableImageView(image: UIImage(named: "car0.png"))
         playerCarImageView.isUserInteractionEnabled = true
         rootView.addSubview(playerCarImageView);
         
@@ -163,8 +275,8 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
         
         rootView.addSubview(obstacleCar)
         
-        //At each generation ad 5 points to score
-        incrementPointsCounter(amount: 5)
+        //At each generation ad 10 points to score **
+        incrementPointsCounter(amount: 10)
         
         dynamicItemBehaviour = UIDynamicItemBehavior(items:[obstacleCar])
         dynamicItemBehaviour.addLinearVelocity(CGPoint(x: 0, y: 300), for: obstacleCar)
@@ -182,12 +294,6 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
         }
         collisionBehaviour.collisionDelegate =  self
         dynamicAnimator.addBehavior(collisionBehaviour)
-        
-        //Two main issues: **
-        //cars overlapping - playing with the timer can fix this
-        //cars displying out of the road - use the same trick used to confine player car in screan bounds
-        
-        //Remember to change the falling speed **
     }
     
     func movePlayersColissionBounds(){
@@ -206,8 +312,6 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
         DispatchQueue.main.asyncAfter(deadline: when) {
             self.generateCarFall(rootView: self.ViewInnerContainer)
         }
-        //There's an issue where once the game is over cars keep showing on the end screen. Could resolve like this: **
-        //Create another transparent view where random cars are only added -> insertSubview(_:belowSubview:)
     }
     
     func resetTimer(){
@@ -260,8 +364,43 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
         }
     }
     
+    func playGameButtonPressed(){
+        dynamicAnimator = UIDynamicAnimator(referenceView: ViewInnerContainer)
+        
+        //Initilaise the array that will keep track of all opposing cars in the game.
+        opponentCarsListForCollision = [UIImageView]()
+        
+        //Setting all road Images for the animation
+        roadSectsImg = [UIImage]()
+        setRoadImgs()
+        
+        //Setting the road motion effect to main ImageView
+        ImgViewRoad.image = UIImage.animatedImage(with: roadSectsImg, duration: 0.5)
+        
+        //Setting all opposing cars
+        carsImg = [UIImage]()
+        setOtherCarsImgs()
+        
+        //Show game points counter on screen
+        setCounterOnScreen(rootView: ViewInnerContainer)
+        
+        //Start all game timing
+        startGameTimer()
+        setGameDuration()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        roadSectsImg = [UIImage]()
+        setRoadImgs()
+        
+        //Setting the road motion effect to main ImageView
+        ImgViewRoad.image = UIImage.animatedImage(with: roadSectsImg, duration: 0.5)
+        
+        //Show main starting screen
+        showPlayGameScreen(rootView: ViewContainer)
+        
+        /*
         // Do any additional setup after loading the view, typically from a nib.
         dynamicAnimator = UIDynamicAnimator(referenceView: ViewInnerContainer)
 
@@ -287,7 +426,7 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
         setGameDuration()
         
         //to increment game points use:
-        //incrementPointsCounter(amount: 0)
+        //incrementPointsCounter(amount: 0)*/
     }
 
     override func didReceiveMemoryWarning() {
