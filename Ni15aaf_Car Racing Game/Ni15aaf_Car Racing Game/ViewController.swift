@@ -162,10 +162,19 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
         let gameOverImageView = UIImageView(image: UIImage(named:"game_over.jpg"))
         
         let pointsLabelView = UILabel(frame: rect)
+        pointsLabelView.numberOfLines = 0 // to support multi lines
         pointsLabelView.text = String(points)+" Points!"
-        pointsLabelView.font = UIFont.boldSystemFont(ofSize: 35)
+        pointsLabelView.font = UIFont.boldSystemFont(ofSize: 27)
         pointsLabelView.textColor = UIColor.white
         pointsLabelView.textAlignment = .center
+        
+        if saveBestScore(points) {
+            pointsLabelView.text! += "\n\nNew best score: "+String(points)+" Points!"
+        }
+        else{
+            pointsLabelView.text! += "\n\nBest score: "+String(getBestScore()!.score)+" Points"
+        }
+        
         
         let replayImageView = replayCustomUIImageView(frame: rect, parentView: gameOverView)
         replayImageView.parentClassDelegate = self
@@ -387,6 +396,30 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
         //Start all game timing
         startGameTimer()
         setGameDuration()
+    }
+    
+    func saveBestScore(_ score: Int) -> Bool{
+        let pastBestScore = getBestScore()
+        if pastBestScore != nil {
+            var newBestScore: Bool! = true
+            if max(pastBestScore!.score,score) == pastBestScore!.score {
+                newBestScore = false
+            }
+            else{
+                let bestScore = BestScore(score: max(pastBestScore!.score,score))
+                NSKeyedArchiver.archiveRootObject(bestScore, toFile: BestScore.ArchiveURL.path)
+            }
+            return newBestScore
+        }
+        else{
+            let bestScore = BestScore(score: score)
+            NSKeyedArchiver.archiveRootObject(bestScore, toFile: BestScore.ArchiveURL.path)
+            return true
+        }
+    }
+    
+    func getBestScore() -> BestScore? {
+        return NSKeyedUnarchiver.unarchiveObject(withFile: BestScore.ArchiveURL.path) as? BestScore
     }
     
     override func viewDidLoad() {

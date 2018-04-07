@@ -56,6 +56,7 @@
 		39D298C42077F9E10035FA21 /* playCustomUIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D298C32077F9E10035FA21 /* playCustomUIImageView.swift */; };
 		39D298C62078051B0035FA21 /* InformationCustomUIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D298C52078051B0035FA21 /* InformationCustomUIImageView.swift */; };
 		39D298C8207812BF0035FA21 /* ExitCustomUIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D298C7207812BF0035FA21 /* ExitCustomUIImageView.swift */; };
+		39D58DDB2078C22000039D93 /* BestScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D58DDA2078C22000039D93 /* BestScore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,6 +132,7 @@
 		39D298C32077F9E10035FA21 /* playCustomUIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = playCustomUIImageView.swift; sourceTree = "<group>"; };
 		39D298C52078051B0035FA21 /* InformationCustomUIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationCustomUIImageView.swift; sourceTree = "<group>"; };
 		39D298C7207812BF0035FA21 /* ExitCustomUIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitCustomUIImageView.swift; sourceTree = "<group>"; };
+		39D58DDA2078C22000039D93 /* BestScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestScore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +186,7 @@
 				39C41BC420761C0F004E01A5 /* img */,
 				2C76AED820690F2600596BA5 /* AppDelegate.swift */,
 				2C76AEDA20690F2600596BA5 /* ViewController.swift */,
+				39D58DDA2078C22000039D93 /* BestScore.swift */,
 				39D298C52078051B0035FA21 /* InformationCustomUIImageView.swift */,
 				39D298C32077F9E10035FA21 /* playCustomUIImageView.swift */,
 				39D298C7207812BF0035FA21 /* ExitCustomUIImageView.swift */,
@@ -458,6 +461,7 @@
 				39A9310220779B56009AEF9C /* replayCustomUIImageView.swift in Sources */,
 				39D298C42077F9E10035FA21 /* playCustomUIImageView.swift in Sources */,
 				39D298C62078051B0035FA21 /* InformationCustomUIImageView.swift in Sources */,
+				39D58DDB2078C22000039D93 /* BestScore.swift in Sources */,
 				2C76AEDB20690F2600596BA5 /* ViewController.swift in Sources */,
 				39C41C05207669E8004E01A5 /* DraggableImageView.swift in Sources */,
 				2C76AED920690F2600596BA5 /* AppDelegate.swift in Sources */,
