@@ -14,6 +14,10 @@
 		2C76AEE320690F2600596BA5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C76AEE120690F2600596BA5 /* LaunchScreen.storyboard */; };
 		2C76AEEE20690F2600596BA5 /* Ni15aaf_Car_Racing_GameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C76AEED20690F2600596BA5 /* Ni15aaf_Car_Racing_GameTests.swift */; };
 		2C76AEF920690F2600596BA5 /* Ni15aaf_Car_Racing_GameUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C76AEF820690F2600596BA5 /* Ni15aaf_Car_Racing_GameUITests.swift */; };
+		399381FD2087252C008D6920 /* ObstacleCarUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399381FC2087252C008D6920 /* ObstacleCarUIImage.swift */; };
+		39938205208745E4008D6920 /* off_limits.wav in Resources */ = {isa = PBXBuildFile; fileRef = 39938204208745E3008D6920 /* off_limits.wav */; };
+		39938208208751DF008D6920 /* collision.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 39938206208751DF008D6920 /* collision.mp3 */; };
+		39938209208751DF008D6920 /* explosion.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 39938207208751DF008D6920 /* explosion.mp3 */; };
 		39A9310220779B56009AEF9C /* replayCustomUIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A9310120779B56009AEF9C /* replayCustomUIImageView.swift */; };
 		39C41BDA20761F53004E01A5 /* road3.png in Resources */ = {isa = PBXBuildFile; fileRef = 39C41BC620761F4F004E01A5 /* road3.png */; };
 		39C41BDB20761F53004E01A5 /* road6.png in Resources */ = {isa = PBXBuildFile; fileRef = 39C41BC720761F4F004E01A5 /* road6.png */; };
@@ -90,6 +94,10 @@
 		2C76AEF420690F2600596BA5 /* Ni15aaf_Car Racing GameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Ni15aaf_Car Racing GameUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C76AEF820690F2600596BA5 /* Ni15aaf_Car_Racing_GameUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ni15aaf_Car_Racing_GameUITests.swift; sourceTree = "<group>"; };
 		2C76AEFA20690F2600596BA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		399381FC2087252C008D6920 /* ObstacleCarUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObstacleCarUIImage.swift; sourceTree = "<group>"; };
+		39938204208745E3008D6920 /* off_limits.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = off_limits.wav; sourceTree = "<group>"; };
+		39938206208751DF008D6920 /* collision.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = collision.mp3; sourceTree = "<group>"; };
+		39938207208751DF008D6920 /* explosion.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = explosion.mp3; sourceTree = "<group>"; };
 		39A9310120779B56009AEF9C /* replayCustomUIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = replayCustomUIImageView.swift; sourceTree = "<group>"; };
 		39C41BC620761F4F004E01A5 /* road3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = road3.png; sourceTree = "<group>"; };
 		39C41BC720761F4F004E01A5 /* road6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = road6.png; sourceTree = "<group>"; };
@@ -183,6 +191,7 @@
 		2C76AED720690F2600596BA5 /* Ni15aaf_Car Racing Game */ = {
 			isa = PBXGroup;
 			children = (
+				39938203208745B4008D6920 /* sounds */,
 				39C41BC420761C0F004E01A5 /* img */,
 				2C76AED820690F2600596BA5 /* AppDelegate.swift */,
 				2C76AEDA20690F2600596BA5 /* ViewController.swift */,
@@ -191,6 +200,7 @@
 				39D298C32077F9E10035FA21 /* playCustomUIImageView.swift */,
 				39D298C7207812BF0035FA21 /* ExitCustomUIImageView.swift */,
 				39C41C04207669E8004E01A5 /* DraggableImageView.swift */,
+				399381FC2087252C008D6920 /* ObstacleCarUIImage.swift */,
 				2C76AEDC20690F2600596BA5 /* Main.storyboard */,
 				2C76AEDF20690F2600596BA5 /* Assets.xcassets */,
 				2C76AEE120690F2600596BA5 /* LaunchScreen.storyboard */,
@@ -216,6 +226,16 @@
 				2C76AEFA20690F2600596BA5 /* Info.plist */,
 			);
 			path = "Ni15aaf_Car Racing GameUITests";
+			sourceTree = "<group>";
+		};
+		39938203208745B4008D6920 /* sounds */ = {
+			isa = PBXGroup;
+			children = (
+				39938206208751DF008D6920 /* collision.mp3 */,
+				39938207208751DF008D6920 /* explosion.mp3 */,
+				39938204208745E3008D6920 /* off_limits.wav */,
+			);
+			path = sounds;
 			sourceTree = "<group>";
 		};
 		39C41BC420761C0F004E01A5 /* img */ = {
@@ -407,6 +427,9 @@
 				39C41C0220763624004E01A5 /* replay.png in Resources */,
 				39C41BDF20761F53004E01A5 /* road5.png in Resources */,
 				39C41BE320761F53004E01A5 /* road10.png in Resources */,
+				39938209208751DF008D6920 /* explosion.mp3 in Resources */,
+				39938205208745E4008D6920 /* off_limits.wav in Resources */,
+				39938208208751DF008D6920 /* collision.mp3 in Resources */,
 				2C76AEDE20690F2600596BA5 /* Main.storyboard in Resources */,
 				39C41BE620761F53004E01A5 /* road14.png in Resources */,
 				39D298BC2077F4380035FA21 /* exit.png in Resources */,
@@ -464,6 +487,7 @@
 				39D58DDB2078C22000039D93 /* BestScore.swift in Sources */,
 				2C76AEDB20690F2600596BA5 /* ViewController.swift in Sources */,
 				39C41C05207669E8004E01A5 /* DraggableImageView.swift in Sources */,
+				399381FD2087252C008D6920 /* ObstacleCarUIImage.swift in Sources */,
 				2C76AED920690F2600596BA5 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

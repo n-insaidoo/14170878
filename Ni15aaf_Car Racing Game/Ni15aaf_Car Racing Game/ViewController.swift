@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import AVFoundation
+import AudioToolbox
 
 protocol SubViewDelegate {
     func movePlayersColissionBounds()
@@ -25,6 +27,10 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
     var dynamicAnimator: UIDynamicAnimator!
     var dynamicItemBehaviour: UIDynamicItemBehavior!
     var collisionBehaviour: UICollisionBehavior!
+    
+    var gameMusic: AVAudioPlayer?
+    var collisonSound: AVAudioPlayer?
+    var explosionSound: AVAudioPlayer?
     
     //Array for containing roads sections images
     var roadSectsImg: [UIImage]!
@@ -123,7 +129,7 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
             fileName+=".png"
             infoPicArr.append(UIImage(named:fileName)!)
         }
-        infoImageView.image = UIImage.animatedImage(with: infoPicArr, duration: 30)
+        infoImageView.image = UIImage.animatedImage(with: infoPicArr, duration: 7)
         
         let exitImageView = ExitCustomUIImageView(frame: rect, parentView: informationViewConatiner)
         exitImageView.image = UIImage(named: "exit.png")
@@ -272,14 +278,14 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
     
     func generateCarFall(rootView: UIView){
         //Setting horizontal boundary range
-        let minX = Int(rootView.bounds.size.width*(15*0.01)) //15% scree size
+        let minX = Int(rootView.bounds.size.width*(15*0.01)) //15% screen size
         let maxX = Int(rootView.bounds.size.width)-minX
         
         //create and ImageView
         let posX = random(minX..<maxX)
         
         let rect = CGRect(x: posX, y: 0, width: 50, height: 90)
-        let obstacleCar = UIImageView(frame: rect)
+        let obstacleCar = ObstacleCarUIImage(frame: rect)
         obstacleCar.image = carsImg[random(0..<6)]
         
         rootView.addSubview(obstacleCar)
@@ -305,6 +311,46 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
         dynamicAnimator.addBehavior(collisionBehaviour)
     }
     
+    func playGameMusic(){
+        let path = Bundle.main.path(forResource: "off_limits.wav", ofType:nil)!
+        let url = URL(fileURLWithPath: path)
+        
+        do {
+            gameMusic = try AVAudioPlayer(contentsOf: url)
+            //set sounds to be played infinitely
+            gameMusic?.numberOfLoops = -1
+            
+            gameMusic?.play()
+        } catch {
+            NSLog("can't load the game music")
+        }
+        
+    }
+    
+    func playCollisionSound(){
+        let path = Bundle.main.path(forResource: "collision.mp3", ofType:nil)!
+        let url = URL(fileURLWithPath: path)
+        
+        do {
+            collisonSound = try AVAudioPlayer(contentsOf: url)
+            collisonSound?.play()
+        } catch {
+            NSLog("can't load the collision sound")
+        }
+    }
+    
+    func playExplosionSound(){
+        let path = Bundle.main.path(forResource: "explosion.mp3", ofType:nil)!
+        let url = URL(fileURLWithPath: path)
+        
+        do {
+            explosionSound = try AVAudioPlayer(contentsOf: url)
+            explosionSound?.play()
+        } catch {
+            NSLog("can't load the explosion sound")
+        }
+    }
+    
     func movePlayersColissionBounds(){
         if collisionBehaviour != nil {
             collisionBehaviour.removeAllBoundaries();
@@ -314,6 +360,25 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
     
     func collisionBehavior(_ behavior: UICollisionBehavior, beganContactFor item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?, at p: CGPoint) {
         pointsCounterView.text = "0" //At each collision loose points
+        
+        playCollisionSound()
+        
+        //vibrate
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        
+        //make obstacle car explode
+        let obstacleCar = item as! UIImageView
+        let when = DispatchTime.now() + DispatchTimeInterval.seconds(2)
+        DispatchQueue.main.asyncAfter(deadline: when) {
+            let index = self.opponentCarsListForCollision.index(of: obstacleCar)
+            if index != nil {
+                self.opponentCarsListForCollision.remove(at: index!)
+            }
+            
+            self.playExplosionSound()
+            
+            obstacleCar.image = UIImage(named: "explosion.png")
+        }
     }
     
     @objc func runTimedCode(){
@@ -424,42 +489,17 @@ class ViewController: UIViewController, SubViewDelegate, UICollisionBehaviorDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //playing game music
+        playGameMusic()
+        
+        //Setting the road and its motion effect to main ImageView
         roadSectsImg = [UIImage]()
         setRoadImgs()
-        
-        //Setting the road motion effect to main ImageView
         ImgViewRoad.image = UIImage.animatedImage(with: roadSectsImg, duration: 0.5)
         
         //Show main starting screen
         showPlayGameScreen(rootView: ViewContainer)
-        
-        /*
-        // Do any additional setup after loading the view, typically from a nib.
-        dynamicAnimator = UIDynamicAnimator(referenceView: ViewInnerContainer)
-
-        //Initilaise the array that will keep track of all opposing cars in the game.
-        opponentCarsListForCollision = [UIImageView]()
-        
-        //Setting all road Images for the animation
-        roadSectsImg = [UIImage]()
-        setRoadImgs()
-        
-        //Setting the road motion effect to main ImageView
-        ImgViewRoad.image = UIImage.animatedImage(with: roadSectsImg, duration: 0.5)
-        
-        //Setting all opposing cars
-        carsImg = [UIImage]()
-        setOtherCarsImgs()
-        
-        //Show game points counter on screen
-        setCounterOnScreen(rootView: ViewInnerContainer)
-        
-        //Start all game timing
-        startGameTimer()
-        setGameDuration()
-        
-        //to increment game points use:
-        //incrementPointsCounter(amount: 0)*/
     }
 
     override func didReceiveMemoryWarning() {

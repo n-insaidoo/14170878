@@ -38,5 +38,5 @@ class DraggableImageView: UIImageView {
         
         self.parentClassDelegate?.movePlayersColissionBounds()
     }
-
+    
 }
